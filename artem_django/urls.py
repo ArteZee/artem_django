@@ -25,6 +25,25 @@ def home_text(request: HttpRequest) -> HttpResponse:
     :return: str
     """
     return HttpResponse("Это домашняя страница с статичным текстом !")
+def check_password(request: HttpRequest, user_password) -> HttpResponse:
+    """
+    function checking if password put correct with allow symbol and length >= 8
+    :param request:
+    :param user_password:str
+    :return:if all correct -> password
+            if not -> Error in password
+    """
+    # set(password) - to reduce iteration of characters
+    unique_password = set(user_password)
+    # if symbol in password is incorrect -> Error
+    if any(mark not in accepted_signs for mark in unique_password):
+        return HttpResponse("Пу пу пууу, Вы использовали запрещенный символ!")
+    # if length of password < 8
+    elif len(user_password) < 8:
+        return HttpResponse("Пароль должен быть не меньше  8-ми символов")
+    # if all is good -> out put that password saved
+    else:
+        return HttpResponse("Пароль {} сохранён".format(user_password))
 
 
 urlpatterns = [
@@ -32,4 +51,5 @@ urlpatterns = [
     path("homepage", home_text),
     path("home/", home_text),
     path("", home_text),
+    path("password/<str:user_password>/", check_password),
 ]
