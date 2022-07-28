@@ -44,6 +44,21 @@ def check_password(request: HttpRequest, user_password) -> HttpResponse:
     # if all is good -> out put that password saved
     else:
         return HttpResponse("Пароль {} сохранён".format(user_password))
+def ganerate_password(request: HttpRequest, length: int) -> HttpResponse:
+    """
+    function generate
+    :param request:
+    :param length:int: how long we want password but not less 8
+    :return:
+    """
+    password = ''
+    if int(length) < 8:
+        return HttpResponse("Пароль должен не меньше 8-ми символов")
+    else:
+        while len(password) != int(length):
+            password += choice(accepted_signs)
+        return HttpResponse(f"Your password is {password}")
+
 
 
 urlpatterns = [
@@ -52,4 +67,6 @@ urlpatterns = [
     path("home/", home_text),
     path("", home_text),
     path("password/<str:user_password>/", check_password),
+    path("password/generate/<int:length>", ganerate_password),
+
 ]
