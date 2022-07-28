@@ -15,7 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpRequest, HttpResponse
+
+# home page
+def home_text(request: HttpRequest) -> HttpResponse:
+    """
+    function out put text on home page
+    :param request:
+    :return: str
+    """
+    return HttpResponse("Это домашняя страница с статичным текстом !")
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("homepage", home_text),
+    path("home/", home_text),
+    path("", home_text),
 ]
