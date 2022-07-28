@@ -16,6 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.http import HttpRequest, HttpResponse
+from random import choice
+
+# get in variable symbol that can be in password
+digits = '1234567890'
+upper_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+lower_letters = 'abcdefghijklmnopqrstuvwxyz'
+# union symbol that can used in password
+accepted_signs = digits + upper_letters + lower_letters
+# dict with article
+article = {1: {"Math": "MATEMATIKA", "History": "HISTORY"},
+           2: {"Gym": "GYM", "Chemistry": "CHEMISTRY"}
+           }
+
 
 # home page
 def home_text(request: HttpRequest) -> HttpResponse:
@@ -25,6 +38,8 @@ def home_text(request: HttpRequest) -> HttpResponse:
     :return: str
     """
     return HttpResponse("Это домашняя страница с статичным текстом !")
+
+
 def check_password(request: HttpRequest, user_password) -> HttpResponse:
     """
     function checking if password put correct with allow symbol and length >= 8
@@ -44,6 +59,8 @@ def check_password(request: HttpRequest, user_password) -> HttpResponse:
     # if all is good -> out put that password saved
     else:
         return HttpResponse("Пароль {} сохранён".format(user_password))
+
+
 def ganerate_password(request: HttpRequest, length: int) -> HttpResponse:
     """
     function generate
@@ -60,6 +77,16 @@ def ganerate_password(request: HttpRequest, length: int) -> HttpResponse:
         return HttpResponse(f"Your password is {password}")
 
 
+def get_article(request: HttpRequest, article_id: int, article_slug: str) -> HttpResponse:
+    """
+    function return  text of id article and his tittle
+    :param request:
+    :param article_id:int: number of article
+    :param article_slug:str: name of tittle
+    :return:str
+    """
+    return HttpResponse(article[int(article_id)][str(article_slug)])
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -68,5 +95,5 @@ urlpatterns = [
     path("", home_text),
     path("password/<str:user_password>/", check_password),
     path("password/generate/<int:length>", ganerate_password),
-
+    path("article/<int:article_id>/<str:article_slug>", get_article),
 ]
